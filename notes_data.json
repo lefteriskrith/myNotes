@@ -1,6 +1,7 @@
 {
   "tags": [
-    "General"
+    "General",
+    "Supermarket"
   ],
   "notes": [
     {
@@ -8,7 +9,9 @@
       "content": "ter",
       "tag": "General",
       "id": "1776791826.154662",
-      "created": "2026-04-21T20:17:06.154662"
+      "created": "2026-04-21T20:17:06.154662",
+      "color": "teal",
+      "updated": "2026-04-22T10:06:42.260597"
     }
   ]
 }

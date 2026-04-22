@@ -3,7 +3,8 @@
     "allow": [
       "Bash(pip install *)",
       "Bash(python -c \"import customtkinter; print\\('OK', customtkinter.__version__\\)\")",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python -c \"import ast, pathlib; ast.parse\\(pathlib.Path\\('app.py'\\).read_text\\(encoding='utf-8'\\)\\); print\\('OK'\\)\")"
     ]
   }
 }

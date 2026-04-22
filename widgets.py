@@ -1,5 +1,10 @@
 import customtkinter as ctk
-from config import C
+from config import C, NOTE_COLORS
+
+_COLOR_ROWS = [
+    ["default", "red", "flamingo", "peach", "yellow", "green", "teal"],
+    ["sky", "sapphire", "blue", "lavender", "mauve", "pink", "rosewater"],
+]
 
 
 class NoteDialog(ctk.CTkToplevel):
@@ -9,7 +14,7 @@ class NoteDialog(ctk.CTkToplevel):
         self.tags = tags
 
         self.title("Edit Note" if note else "New Note")
-        self.geometry("520x560")
+        self.geometry("500x620")
         self.resizable(True, True)
         self.configure(fg_color=C["base"])
         self.transient(parent)
@@ -44,8 +49,31 @@ class NoteDialog(ctk.CTkToplevel):
             dropdown_hover_color=C["surface1"],
         ).grid(row=5, column=0, padx=20, sticky="ew")
 
+        # ── color picker (2 rows × 7) ─────────────────────────────────────────
+        self._label("Color", row=6)
+        picker = ctk.CTkFrame(self, fg_color="transparent")
+        picker.grid(row=7, column=0, padx=20, pady=(0, 4), sticky="w")
+
+        self._selected_color: str = note.get("color", "default") if note else "default"
+        self._color_btns: dict[str, ctk.CTkButton] = {}
+
+        for r, row_keys in enumerate(_COLOR_ROWS):
+            for c, key in enumerate(row_keys):
+                col_def = NOTE_COLORS[key]
+                circle = col_def["accent"] if col_def["accent"] else C["surface2"]
+                btn = ctk.CTkButton(
+                    picker, text="", width=26, height=26, corner_radius=13,
+                    fg_color=circle, hover_color=circle,
+                    border_width=2 if key == self._selected_color else 0,
+                    border_color=C["text"],
+                    command=lambda k=key: self._pick_color(k),
+                )
+                btn.grid(row=r, column=c, padx=3, pady=3)
+                self._color_btns[key] = btn
+
+        # ── save / cancel ────────────────────────────────────────────────────
         btn_frame = ctk.CTkFrame(self, fg_color="transparent")
-        btn_frame.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
+        btn_frame.grid(row=8, column=0, padx=20, pady=16, sticky="ew")
         btn_frame.grid_columnconfigure((0, 1), weight=1)
 
         ctk.CTkButton(
@@ -66,29 +94,35 @@ class NoteDialog(ctk.CTkToplevel):
     def _label(self, text: str, row: int) -> None:
         ctk.CTkLabel(
             self, text=text, text_color=C["subtext0"],
-            font=ctk.CTkFont(size=12),
+            font=ctk.CTkFont(size=11, weight="bold"),
         ).grid(row=row, column=0, padx=20, pady=(14, 4), sticky="w")
+
+    def _pick_color(self, key: str) -> None:
+        for k, btn in self._color_btns.items():
+            btn.configure(border_width=2 if k == key else 0)
+        self._selected_color = key
 
     def _save(self) -> None:
         self.result = {
             "title":   self.title_entry.get().strip(),
             "content": self.content_box.get("1.0", "end-1c").strip(),
             "tag":     self.tag_var.get(),
+            "color":   self._selected_color,
         }
         self.destroy()
 
 
 class NoteCard(ctk.CTkFrame):
-    def __init__(self, master, note: dict, accent: str, on_edit, on_delete, **kw):
+    def __init__(self, master, note: dict, accent: str, bg: str, on_edit, on_delete, **kw):
         super().__init__(
             master, corner_radius=12,
-            fg_color=C["surface0"], border_width=1, border_color=C["surface1"],
+            fg_color=bg, border_width=1, border_color=C["surface1"],
             **kw,
         )
         self._accent = accent
         self.grid_columnconfigure(0, weight=1)
 
-        # thin top accent bar
+        # accent bar
         ctk.CTkFrame(self, height=3, corner_radius=0, fg_color=accent).grid(
             row=0, column=0, columnspan=2, sticky="ew",
         )
