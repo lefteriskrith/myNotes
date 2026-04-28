@@ -2,10 +2,10 @@ import customtkinter as ctk
 from datetime import datetime
 from tkinter import messagebox
 
-import data
-from config import C, NOTE_COLORS, tag_color
-from note_utils import filter_visible_notes, move_note
-from widgets import NoteCard, NoteDialog
+from . import data
+from .config import C, NOTE_COLORS, tag_color
+from .note_utils import filter_visible_notes, move_note
+from .widgets import NoteCard, NoteDialog
 
 
 class App(ctk.CTk):
@@ -25,7 +25,8 @@ class App(ctk.CTk):
         self._refresh_sidebar()
         self._refresh_notes()
 
-        # force redraw on resize to prevent canvas artifacts
+        # Force a redraw on every resize to prevent canvas background artifacts
+        # that appear when the window is resized quickly.
         self.bind("<Configure>", lambda _: self.after(1, self.update_idletasks))
 
     # ── layout ───────────────────────────────────────────────────────────────
@@ -43,19 +44,17 @@ class App(ctk.CTk):
         sb.grid_rowconfigure(2, weight=1)
         sb.grid_propagate(False)
 
-        # title
         ctk.CTkLabel(
             sb, text="myNotes",
             font=ctk.CTkFont(size=20, weight="bold"),
             text_color=C["lavender"],
         ).grid(row=0, column=0, padx=16, pady=(22, 0), sticky="w")
 
-        # thin separator
+        # Thin horizontal rule separating the title from the tag list.
         ctk.CTkFrame(sb, height=1, fg_color=C["surface1"]).grid(
             row=1, column=0, padx=12, pady=(10, 6), sticky="ew",
         )
 
-        # tags list
         self._tags_frame = ctk.CTkScrollableFrame(
             sb, fg_color="transparent",
             scrollbar_fg_color=C["mantle"],           # hide scrollbar track
@@ -65,7 +64,6 @@ class App(ctk.CTk):
         self._tags_frame.grid(row=2, column=0, padx=4, pady=0, sticky="nsew")
         self._tags_frame.grid_columnconfigure(0, weight=1)
 
-        # new tag button — compact, fits within 200px
         ctk.CTkButton(
             sb, text="+ New Tag",
             fg_color="transparent", border_color=C["surface1"], border_width=1,
@@ -80,7 +78,7 @@ class App(ctk.CTk):
         main.grid_columnconfigure(0, weight=1)
         main.grid_rowconfigure(1, weight=1)
 
-        # top bar
+        # ── top bar ───────────────────────────────────────────────────────────
         topbar = ctk.CTkFrame(main, height=62, corner_radius=0, fg_color=C["mantle"])
         topbar.grid(row=0, column=0, sticky="ew")
         topbar.grid_columnconfigure(1, weight=1)
@@ -116,15 +114,14 @@ class App(ctk.CTk):
             height=34, command=self._new_note,
         ).grid(row=0, column=2, padx=16, pady=14)
 
-        # thin separator under topbar
         ctk.CTkFrame(main, height=1, fg_color=C["surface0"]).grid(
             row=0, column=0, sticky="sew",
         )
 
-        # notes canvas
+        # ── notes grid ────────────────────────────────────────────────────────
         self._notes_frame = ctk.CTkScrollableFrame(
             main, fg_color="transparent",
-            scrollbar_fg_color=C["base"],             # hide scrollbar track
+            scrollbar_fg_color=C["base"],
             scrollbar_button_color=C["surface1"],
             scrollbar_button_hover_color=C["surface2"],
         )
@@ -132,7 +129,8 @@ class App(ctk.CTk):
         for col in range(3):
             self._notes_frame.grid_columnconfigure(col, weight=1, uniform="col")
 
-        # keep canvas bg in sync to prevent resize artifacts
+        # Keep the internal canvas background in sync with the app background
+        # to prevent white flashes when the scrollable frame is resized.
         def _fix_canvas(*_):
             self._notes_frame._parent_canvas.configure(bg=C["base"])
             self.update_idletasks()
@@ -267,15 +265,6 @@ class App(ctk.CTk):
             note["updated"] = datetime.now().isoformat()
             data.save(self._data)
             self._refresh_sidebar()
-            self._refresh_notes()
-
-    def _move_note(self, note: dict, direction: str) -> None:
-        moved = move_note(
-            self._data["notes"], note["id"], direction,
-            self._selected_tag, self._search_var.get(),
-        )
-        if moved:
-            data.save(self._data)
             self._refresh_notes()
 
     def _delete_note(self, note: dict) -> None:

@@ -2,8 +2,17 @@
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![customtkinter](https://img.shields.io/badge/customtkinter-UI-4b8bbe?logo=python&logoColor=white)](https://github.com/TomSchimansky/CustomTkinter)
+[![Download](https://img.shields.io/github/v/release/lefteriskrith/myNotes?label=Download&logo=windows&color=0078d4)](https://github.com/lefteriskrith/myNotes/releases/latest)
 
 A desktop note-taking app built with Python and `customtkinter`.
+
+## Download
+
+**Windows** — no Python required:
+
+[⬇ Download myNotes.exe](https://github.com/lefteriskrith/myNotes/releases/latest/download/myNotes.exe)
+
+> The exe is standalone. Just download and run — your notes are saved next to the exe.
 
 ## Screenshots
 

@@ -1,6 +1,7 @@
 import customtkinter as ctk
-from config import C, NOTE_COLORS
+from .config import C, NOTE_COLORS
 
+# Two rows of color swatches shown in the NoteDialog color picker.
 _COLOR_ROWS = [
     ["default", "red", "flamingo", "peach", "yellow", "green", "teal"],
     ["sky", "sapphire", "blue", "lavender", "mauve", "pink", "rosewater"],
@@ -49,7 +50,7 @@ class NoteDialog(ctk.CTkToplevel):
             dropdown_hover_color=C["surface1"],
         ).grid(row=5, column=0, padx=20, sticky="ew")
 
-        # ── color picker (2 rows × 7) ─────────────────────────────────────────
+        # ── color picker (2 rows × 7 swatches) ───────────────────────────────
         self._label("Color", row=6)
         picker = ctk.CTkFrame(self, fg_color="transparent")
         picker.grid(row=7, column=0, padx=20, pady=(0, 4), sticky="w")
@@ -71,7 +72,7 @@ class NoteDialog(ctk.CTkToplevel):
                 btn.grid(row=r, column=c, padx=3, pady=3)
                 self._color_btns[key] = btn
 
-        # ── save / cancel ────────────────────────────────────────────────────
+        # ── save / cancel ─────────────────────────────────────────────────────
         btn_frame = ctk.CTkFrame(self, fg_color="transparent")
         btn_frame.grid(row=8, column=0, padx=20, pady=16, sticky="ew")
         btn_frame.grid_columnconfigure((0, 1), weight=1)
@@ -122,7 +123,7 @@ class NoteCard(ctk.CTkFrame):
         self._accent = accent
         self.grid_columnconfigure(0, weight=1)
 
-        # accent bar
+        # Thin colored stripe at the top of the card.
         ctk.CTkFrame(self, height=3, corner_radius=0, fg_color=accent).grid(
             row=0, column=0, columnspan=2, sticky="ew",
         )
@@ -178,6 +179,8 @@ class NoteCard(ctk.CTkFrame):
             command=on_move_down,
         ).pack(side="left", padx=2)
 
+        # Recursively bind hover events so the border highlight triggers anywhere
+        # on the card, not just on the frame background itself.
         self._bind_hover(self)
 
     def _bind_hover(self, w) -> None:

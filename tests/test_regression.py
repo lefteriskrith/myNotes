@@ -1,4 +1,4 @@
-from note_utils import filter_visible_notes, move_note
+from mynotes.note_utils import filter_visible_notes, move_note
 
 
 def make_note(id: str, title: str, tag: str = "General", content: str = "") -> dict:

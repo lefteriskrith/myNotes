@@ -1,9 +1,9 @@
-# Dark midnight-blue palette
+# Catppuccin Mocha-inspired dark palette — all UI colors come from here.
 C = {
-    "base":     "#171a2e",   # main background — dark navy
-    "mantle":   "#11142a",   # sidebar / topbar
+    "base":     "#171a2e",   # main window background
+    "mantle":   "#11142a",   # sidebar and topbar
     "crust":    "#0b0d1f",
-    "surface0": "#252842",   # card / input background
+    "surface0": "#252842",   # card and input background
     "surface1": "#363a54",
     "surface2": "#464b65",
     "overlay0": "#6b6f8a",
@@ -27,13 +27,15 @@ C = {
     "rosewater":"#f5e0dc",
 }
 
+# Cycles through these accent colors when assigning a color to each tag.
 TAG_COLORS = [
     C["blue"], C["mauve"], C["teal"], C["peach"],
     C["green"], C["yellow"], C["sapphire"], C["pink"],
     C["lavender"], C["maroon"], C["sky"], C["flamingo"],
 ]
 
-# Per-note color presets  (bg = card bg, accent = top bar + hover border)
+# Per-note color presets. `bg` overrides the card background; `accent` overrides
+# the top stripe and hover border. None means "use tag color / default surface".
 NOTE_COLORS: dict[str, dict] = {
     "default":   {"bg": None,        "accent": None},
     "red":       {"bg": "#3b1e28",   "accent": "#f38ba8"},
@@ -53,6 +55,8 @@ NOTE_COLORS: dict[str, dict] = {
 
 
 def tag_color(tags: list[str], tag: str) -> str:
+    # Derives a stable accent color for a tag by cycling through TAG_COLORS
+    # based on the tag's position in the list.
     try:
         return TAG_COLORS[tags.index(tag) % len(TAG_COLORS)]
     except ValueError:

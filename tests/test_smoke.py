@@ -1,5 +1,5 @@
-import data
-from note_utils import filter_visible_notes
+import mynotes.data as data
+from mynotes.note_utils import filter_visible_notes
 
 
 def test_data_save_and_load_roundtrip(tmp_path, monkeypatch):
