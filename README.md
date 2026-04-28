@@ -5,6 +5,12 @@
 
 Ένα desktop app για σημειώσεις γραμμένο σε Python με `customtkinter`.
 
+## Screenshots
+
+![myNotes screenshot 1](1.png)
+
+![myNotes screenshot 2](2.png)
+
 ## Τι κάνει
 - Διαχειρίζεται σημειώσεις με τίτλο, περιεχόμενο και ετικέτες (`tags`)
 - Προσφέρει φιλική σκοτεινή διεπαφή με responsive διάταξη
