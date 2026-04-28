@@ -113,7 +113,7 @@ class NoteDialog(ctk.CTkToplevel):
 
 
 class NoteCard(ctk.CTkFrame):
-    def __init__(self, master, note: dict, accent: str, bg: str, on_edit, on_delete, **kw):
+    def __init__(self, master, note: dict, accent: str, bg: str, on_edit, on_delete, on_move_up, on_move_down, **kw):
         super().__init__(
             master, corner_radius=12,
             fg_color=bg, border_width=1, border_color=C["surface1"],
@@ -161,6 +161,21 @@ class NoteCard(ctk.CTkFrame):
             fg_color=C["red"], text_color=C["crust"],
             hover_color=C["maroon"], font=ctk.CTkFont(size=11),
             command=on_delete,
+        ).pack(side="left", padx=2)
+
+        move = ctk.CTkFrame(self, fg_color="transparent")
+        move.grid(row=4, column=0, columnspan=2, padx=14, pady=(0, 10), sticky="w")
+        ctk.CTkButton(
+            move, text="↑", width=40, height=24,
+            fg_color=C["surface1"], text_color=C["text"],
+            hover_color=C["surface2"], font=ctk.CTkFont(size=11),
+            command=on_move_up,
+        ).pack(side="left", padx=2)
+        ctk.CTkButton(
+            move, text="↓", width=40, height=24,
+            fg_color=C["surface1"], text_color=C["text"],
+            hover_color=C["surface2"], font=ctk.CTkFont(size=11),
+            command=on_move_down,
         ).pack(side="left", padx=2)
 
         self._bind_hover(self)

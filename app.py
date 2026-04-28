@@ -4,6 +4,7 @@ from tkinter import messagebox
 
 import data
 from config import C, NOTE_COLORS, tag_color
+from note_utils import filter_visible_notes, move_note
 from widgets import NoteCard, NoteDialog
 
 
@@ -203,16 +204,10 @@ class App(ctk.CTk):
         for w in self._notes_frame.winfo_children():
             w.destroy()
 
-        query = self._search_var.get().lower()
-        notes = [
-            n for n in reversed(self._data["notes"])
-            if n.get("tag") == self._selected_tag
-            and (
-                not query
-                or query in n.get("title", "").lower()
-                or query in n.get("content", "").lower()
-            )
-        ]
+        query = self._search_var.get()
+        notes = filter_visible_notes(
+            self._data["notes"], self._selected_tag, query
+        )
 
         total = sum(1 for n in self._data["notes"] if n.get("tag") == self._selected_tag)
         shown = len(notes)
@@ -236,7 +231,18 @@ class App(ctk.CTk):
                 self._notes_frame, note, accent, bg,
                 on_edit=lambda n=note: self._edit_note(n),
                 on_delete=lambda n=note: self._delete_note(n),
+                on_move_up=lambda n=note: self._move_note(n, "up"),
+                on_move_down=lambda n=note: self._move_note(n, "down"),
             ).grid(row=i // 3, column=i % 3, padx=8, pady=8, sticky="new")
+
+    def _move_note(self, note: dict, direction: str) -> None:
+        moved = move_note(
+            self._data["notes"], note["id"], direction,
+            self._selected_tag, self._search_var.get(),
+        )
+        if moved:
+            data.save(self._data)
+            self._refresh_notes()
 
     # ── CRUD ──────────────────────────────────────────────────────────────────
 
@@ -261,6 +267,15 @@ class App(ctk.CTk):
             note["updated"] = datetime.now().isoformat()
             data.save(self._data)
             self._refresh_sidebar()
+            self._refresh_notes()
+
+    def _move_note(self, note: dict, direction: str) -> None:
+        moved = move_note(
+            self._data["notes"], note["id"], direction,
+            self._selected_tag, self._search_var.get(),
+        )
+        if moved:
+            data.save(self._data)
             self._refresh_notes()
 
     def _delete_note(self, note: dict) -> None:

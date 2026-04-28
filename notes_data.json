@@ -5,13 +5,22 @@
   ],
   "notes": [
     {
-      "title": "tre",
-      "content": "ter",
+      "title": "Fire my boss",
+      "content": "????",
+      "tag": "General",
+      "color": "pink",
+      "id": "1777365067.455411",
+      "created": "2026-04-28T11:31:07.455411",
+      "updated": "2026-04-28T11:31:13.274091"
+    },
+    {
+      "title": "Walk the dog",
+      "content": "To the park\n@ the pool",
       "tag": "General",
       "id": "1776791826.154662",
       "created": "2026-04-21T20:17:06.154662",
       "color": "teal",
-      "updated": "2026-04-22T10:06:42.260597"
+      "updated": "2026-04-28T11:30:07.251016"
     }
   ]
 }
