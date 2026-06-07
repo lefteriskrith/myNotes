@@ -6,7 +6,7 @@ A desktop note-taking app built with Python and `customtkinter`.
 
 **Windows** — no Python required:
 
-[Download myNotes.exe](dist/myNotes.zip)
+[Download myNotes](dist/myNotes.zip)
 
 > The zip includes the standalone Windows app. Download, unzip, and run `myNotes.exe` — your notes are saved next to the exe.
 
